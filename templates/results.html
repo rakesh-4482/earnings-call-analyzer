@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Earnings Call Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f6f8;
+        }
+
+        h2 {
+            color: #1f2937;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+        }
+
+        h3 {
+            color: #111827;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background-color: #e5e7eb;
+            font-weight: bold;
+        }
+
+        a {
+            text-decoration: none;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📊 Earnings Call Analysis Results</h2>
+
+<div class="card">
+    <h3>Management Tone</h3>
+    <span class="tag">{{ results.tone }}</span>
+
+    <h3>Confidence Level</h3>
+    <span class="tag">{{ results.confidence_level }}</span>
+</div>
+
+<div class="card">
+    <h3>Key Positives</h3>
+    <ul>
+        {% for item in results.key_positives %}
+            <li>{{ item }}</li>
+        {% else %}
+            <li>No significant positives detected.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Key Concerns</h3>
+    <ul>
+        {% for item in results.key_concerns %}
+            <li>{{ item }}</li>
+        {% else %}
+            <li>No significant concerns detected.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Forward Guidance</h3>
+    <ul>
+        {% for item in results.forward_guidance %}
+            <li>{{ item }}</li>
+        {% else %}
+            <li>No forward guidance detected.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Growth Initiatives</h3>
+    <ul>
+        {% for item in results.growth_initiatives %}
+            <li>{{ item }}</li>
+        {% else %}
+            <li>No growth initiatives detected.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="card">
+    <h3>Capacity Utilization Trends</h3>
+    <ul>
+        {% for item in results.capacity_utilization_trends %}
+            <li>{{ item }}</li>
+        {% else %}
+            <li>No capacity trends detected.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<br>
+<a href="/">Analyze Another Transcript</a>
+
+</body>
+</html>
