@@ -117,22 +117,50 @@ def analyze_transcript(text):
                 if re.search(r'\b' + re.escape(word) + r'\b', clean_s.lower()):
                     capacity_trends.append(clean_s)
                     break
-
+    
+    word_count = len(text.split())
+    sentence_count = len(sentences)
 
     return {
-        "tone": tone,
+        "tone": tone, 
         "confidence_level": confidence,
         "key_positives": key_positives[:5],
         "key_concerns": key_concerns[:5],
         "forward_guidance": forward_guidance[:5],
         "growth_initiatives": growth_initiatives[:5],
-        "capacity_utilization_trends": capacity_trends[:5]
-    }
+        "capacity_utilization_trends": capacity_trends[:5],
+        "document_stats": {
+            "word_count": word_count,
+            "sentence_count": sentence_count
+            }
+        }
+
 
 
 @app.post("/analyze", response_class=HTMLResponse)
 async def analyze(request: Request, file: UploadFile = File(...)):
+
+    # ✅ File type validation
+    if not file.filename.lower().endswith(".pdf"):
+        return templates.TemplateResponse(
+            "results.html",
+            {
+                "request": request,
+                "results": {
+                    "tone": "N/A",
+                    "confidence_level": "N/A",
+                    "key_positives": [],
+                    "key_concerns": [],
+                    "forward_guidance": [],
+                    "growth_initiatives": [],
+                    "capacity_utilization_trends": [],
+                    "error": "Only PDF files are supported."
+                }
+            }
+        )
+
     contents = await file.read()
+
     pdf_reader = PyPDF2.PdfReader(io.BytesIO(contents))
 
     full_text = ""
@@ -140,6 +168,25 @@ async def analyze(request: Request, file: UploadFile = File(...)):
         text = page.extract_text()
         if text:
             full_text += text + "\n"
+
+    # ✅ Minimum length validation
+    if len(full_text.strip()) < 500:
+        return templates.TemplateResponse(
+            "results.html",
+            {
+                "request": request,
+                "results": {
+                    "tone": "Insufficient Data",
+                    "confidence_level": "Low",
+                    "key_positives": [],
+                    "key_concerns": [],
+                    "forward_guidance": [],
+                    "growth_initiatives": [],
+                    "capacity_utilization_trends": [],
+                    "error": "Document too short for meaningful analysis."
+                }
+            }
+        )
 
     results = analyze_transcript(full_text)
 
@@ -150,4 +197,5 @@ async def analyze(request: Request, file: UploadFile = File(...)):
             "results": results
         }
     )
+
 

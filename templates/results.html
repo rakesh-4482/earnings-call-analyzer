@@ -23,6 +23,7 @@
 
         h3 {
             color: #111827;
+            margin-bottom: 10px;
         }
 
         ul {
@@ -35,17 +36,39 @@
             border-radius: 6px;
             background-color: #e5e7eb;
             font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .error-box {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .stats {
+            font-size: 14px;
+            color: #374151;
         }
 
         a {
             text-decoration: none;
             color: #2563eb;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
 <h2>📊 Earnings Call Analysis Results</h2>
+
+{% if results.error %}
+    <div class="error-box">
+        {{ results.error }}
+    </div>
+{% endif %}
 
 <div class="card">
     <h3>Management Tone</h3>
@@ -109,6 +132,16 @@
         {% endfor %}
     </ul>
 </div>
+
+{% if results.document_stats %}
+<div class="card">
+    <h3>Document Statistics</h3>
+    <div class="stats">
+        <p><strong>Word Count:</strong> {{ results.document_stats.word_count }}</p>
+        <p><strong>Sentence Count:</strong> {{ results.document_stats.sentence_count }}</p>
+    </div>
+</div>
+{% endif %}
 
 <br>
 <a href="/">Analyze Another Transcript</a>
